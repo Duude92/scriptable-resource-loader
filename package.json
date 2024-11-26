@@ -1,0 +1,17 @@
+{
+  "name": "com.duude92.scriptable-resource-loader",
+  "version": "1.0.0",
+  "description": "This package allows you to create/load ScriptableObject resources from Resources directory caching them.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Duude92/scriptable-resource-loader.git"
+  },
+  "author": {
+    "name": "Yurii Hladyshenko",
+    "email": "yuriihladyshenko@gmail.com"
+  },
+  "displayName": "ScriptableObject Resource Loader",
+  "unity": "6000.0",
+  "type": "tool"
+}
