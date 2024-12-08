@@ -7,7 +7,8 @@ namespace ScriptableResourceLoader
 {
     public sealed class ResourceLoader
     {
-        private static readonly Dictionary<Type, ResourceLoader> Instances = new();
+        private static readonly Dictionary<string, ResourceLoader> Instances = new();
+        
         private readonly ScriptableObject _asset;
 
         private ResourceLoader(ScriptableObject asset)
@@ -17,30 +18,36 @@ namespace ScriptableResourceLoader
 
         public static T GetResource<T>() where T : ScriptableObject
         {
-            if (Instances.TryGetValue(typeof(T), out var @object))
+            return GetResource<T>(typeof(T).Name);
+        }
+
+        public static T GetResource<T>(string path) where T : ScriptableObject
+        {
+            if (Instances.TryGetValue(path, out var @object))
             {
                 return @object._asset as T;
             }
         
-            var newInstance = new ResourceLoader(Resources.Load(typeof(T).Name) as T);
+            var newInstance = new ResourceLoader(Resources.Load(path) as T);
 
 #if UNITY_EDITOR
             if (!newInstance._asset)
             {
                 var asset = ScriptableObject.CreateInstance<T>();
 
-                AssetDatabase.CreateAsset(asset, "Assets/Resources/" + typeof(T).Name + ".asset");
+                AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
                 AssetDatabase.SaveAssets();
                 newInstance = new ResourceLoader(asset);
             }
 #endif
             if (newInstance._asset)
             {
-                Instances.Add(typeof(T), newInstance);
+                Instances.Add(path, newInstance);
                 return newInstance._asset as T;
             }
             newInstance = null;
-            throw new Exception($"No database found for {typeof(T).Name}");
+            throw new Exception($"No database found for {path}");
+ 
         }
     }
 }
